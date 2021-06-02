@@ -387,6 +387,23 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: expirationTime
         Enabled: True
+        
+  DynamoDBProductTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: productId
+          AttributeType: N
+      KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: 'NEW_AND_OLD_IMAGES'
+      TableName: 'aws-serverless-productdatabase'
+      TimeToLiveSpecification:
+        AttributeName: expirationTime
+        Enabled: True
 
   APIGWCloudWatchRole:
     Type: 'AWS::IAM::Role'

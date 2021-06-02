@@ -1,10 +1,16 @@
 import json
 import os
 
-from aws_lambda_powertools import Logger, Tracer
+from aws_lambda_powertools import Logger, Tracer, Metrics
+import boto3
+from botocore.exceptions import ClientError
 
 logger = Logger()
 tracer = Tracer()
+metrics = Metrics()
+
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table("aws-serverless-productdatabase")
 
 with open("product_list.json", "r") as product_list:
     product_list = json.load(product_list)
@@ -25,12 +31,13 @@ def lambda_handler(event, context):
     path_params = event["pathParameters"]
     product_id = path_params.get("product_id")
     logger.debug("Retriving product_id: %s", product_id)
-    product = next(
-        (item for item in product_list if item["productId"] == product_id), None
-    )
-
-    return {
-        "statusCode": 200,
-        "headers": HEADERS,
-        "body": json.dumps({"product": product}),
-    }
+    try:
+        product = table.get_item(Key={"ProductID": product_id})
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        return {
+            "statusCode": 200,
+            "headers": HEADERS,
+            "body": json.dumps({"product": product['Item']}),
+        }
