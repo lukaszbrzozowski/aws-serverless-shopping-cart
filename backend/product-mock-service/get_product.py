@@ -32,7 +32,7 @@ def lambda_handler(event, context):
     product_id = path_params.get("product_id")
     logger.debug("Retriving product_id: %s", product_id)
     try:
-        product = table.get_item(Key={"ProductID": product_id})
+        product = table.get_item(Key={"productId": product_id})
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:

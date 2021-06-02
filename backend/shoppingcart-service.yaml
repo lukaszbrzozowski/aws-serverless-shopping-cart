@@ -400,7 +400,7 @@ Resources:
       BillingMode: PAY_PER_REQUEST
       StreamSpecification:
         StreamViewType: 'NEW_AND_OLD_IMAGES'
-      TableName: 'aws-serverless-productdatabase'
+      TableName: aws-serverless-productdatabase
       TimeToLiveSpecification:
         AttributeName: expirationTime
         Enabled: True
